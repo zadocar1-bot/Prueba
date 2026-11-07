@@ -38,8 +38,10 @@ jobs:
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/captura.png"
 
       - uses: actions/upload-artifact@v4
-        with:
-          name: resultado
-          path: |
-            app.zip
-            captura.png
+      - name: Elegir la Xcode más nueva y adaptar el proyecto
+        run: |
+          ls /Applications | grep -i xcode
+          NEWEST=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          sudo xcode-select -s "$NEWEST"
+          xcodebuild -version
+          sed -i '' 's/objectVersion = 110;/objectVersion = 77;/' 2026.xcodeproj/project.pbxproj
